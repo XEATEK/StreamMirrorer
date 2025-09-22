@@ -1,0 +1,6 @@
+﻿services:
+  streammirrorer:
+    image: streammirrorer
+    build:
+      context: .
+      dockerfile: StreamMirrorer/Dockerfile
