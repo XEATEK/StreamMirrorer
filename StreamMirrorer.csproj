@@ -8,10 +8,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <Folder Include="Models\" />
-    </ItemGroup>
-
-    <ItemGroup>
       <PackageReference Include="Serilog" Version="4.3.1-dev-02385" />
       <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.1-dev-02307" />
       <PackageReference Include="Serilog.Sinks.Console" Version="6.0.1-dev-00953" />
