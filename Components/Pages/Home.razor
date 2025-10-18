@@ -7,20 +7,17 @@
 
 <h1>Hello, world!</h1>
 
-Welcome to your new app.
+<p role="status">Test Recorder: @RecorderTimes</p>
 
-<br/>
-
-<p role="status">Current count: @CurrentCount</p>
-
-<button class="btn btn-primary" @onclick="IncrementCount">Click me</button>
+<button class="btn btn-primary" @onclick="IncrementCount">Record 10 second segment</button>
 
 @code {
-    private int CurrentCount { get; set; }
-
+    private int RecorderTimes { get; set; }
+    
     private void IncrementCount()
     {
         RecordController.StartNewRecording("Shoomimi", StreamerPlatforms.Twitch);
+        RecorderTimes++;
     }
 
 }
