@@ -1,5 +1,6 @@
 using StreamMirrorer.Interfaces;
 using System.IO;
+using StreamMirrorer.Utility;
 
 namespace StreamMirrorer.Recorders;
 
@@ -17,31 +18,45 @@ public class TwitchRecorder : IRecorder
 
     private Task? _recordingTask;
 
+    private string? StreamLink { get; set; }
+    
     public TwitchRecorder(ILogger<TwitchRecorder> logger, IConfiguration configuration)
     {
         _logger = logger;
         _configuration = configuration;
     }
     
-    private void Setup(string streamLink, string outputPath)
+    private void Setup(string username, string outputPath)
     {
         // Implementation for setting up Twitch recorder
-        Console.WriteLine($"Setting up Twitch recorder for channel: {streamLink}");
+        _logger.LogInformation("Setting up Twitch recorder for channel: {username}", username);
         
-        RecorderName = streamLink;
+        //Getting streamer link
+        string linkFormatStr = _configuration["LinkFormats:Twitch"] ?? throw new NullReferenceException(message:"No Twitch link format specified.");
+        
+        Dictionary<string, object> linkParms = new()
+        {
+            { "StreamerName", username }
+        };
+        
+        StreamLink = StringFormatter.ReplaceNamedPlaceholders(linkFormatStr, linkParms);
+        
+        _logger.LogInformation("StreamerLink: {streamLink}", StreamLink);
+        
+        RecorderName = username;
         OutputPath = outputPath;
         
     }
 
-    public void StartRecording(string streamLink, string outputPath)
+    public void StartRecording(string name, string outputPath)
     {
-        Setup(streamLink, outputPath);
-        Console.WriteLine($"Starting Twitch recording from {RecorderName} to {OutputPath}");
+        Setup(name, outputPath);
+        _logger.LogInformation("Starting Twitch recording from {name} to {outputPath}", name, outputPath);
     }
 
     public void StopRecording()
     {
-        Console.WriteLine("Stopping Twitch recording");
+        _logger.LogInformation("Stopping Twitch recording");
     }
     
 }

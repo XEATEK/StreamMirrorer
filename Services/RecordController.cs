@@ -24,23 +24,11 @@ public class RecordController : IRecordController
     
     public async Task<bool> StartNewRecording(string streamerName, StreamerPlatforms streamerPlatform)
     {
-        //Getting streamer link
-        string linkFormatStr = StreamerPlatformUtility.GetPlatformLink(streamerPlatform);
-        
-        Dictionary<string, object> parms = new()
-        {
-            { "StreamerName", streamerName }
-        };
-        
-        string formatedLink = StringFormatter.ReplaceNamedPlaceholders(linkFormatStr, parms);
-        
-        _logger.LogInformation("StreamerLink: {formatedLink}", formatedLink);
-        
         IRecorder recorder = _recorderFactory.Create(streamerPlatform);
 
         const string outputPath = @"O:\Projects\StreamMirrorer\TempStreams";
         
-        recorder.StartRecording(formatedLink, outputPath);
+        recorder.StartRecording(streamerName, outputPath);
         
         Thread.Sleep(10000);
         
