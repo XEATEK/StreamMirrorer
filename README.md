@@ -8,7 +8,7 @@ A robust, self-hosted application designed to automatically archive Twitch lives
 
 ## 📖 About The Project
 
-Have you ever missed a livestream from your favorite creator, only to find the VOD was deleted? This project aims to solve that problem by creating a reliable, "set-and-forget" solution for archiving Twitch streams on your own hardware.
+Have you ever missed a livestream from your favorite creator, only to find the VOD was muted? This project aims to solve that problem by creating a reliable, "set-and-forget" solution for archiving Twitch streams on your own hardware.
 
 The goal is to build a robust application that monitors specified Twitch channels, automatically records their streams from the moment they go live, and saves them directly to your local server. A user-friendly web interface will then allow you to easily browse, watch, and manage your personal archive.
 
