@@ -45,7 +45,7 @@ The ultimate vision is to create a polished, open-source application that anyone
 
 ## ⚠️ Current Status
 
-This project is in the **exploratory research and early development stage**. The core architecture has been designed, but there is no functional release available yet. This README serves as a public-facing design document outlining the project's goals and technical direction.
+This project is in it's **development stage**. The core architecture has been designed, but there is no functional release available yet.
 
 ---
 
