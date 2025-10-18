@@ -1,11 +1,13 @@
-using Recorder.Interfaces;
+using StreamMirrorer.Interfaces;
 using System.IO;
 
-namespace Recorder.Recorders;
+namespace StreamMirrorer.Recorders;
 
 public class TwitchRecorder : IRecorder
 {
     //Services
+    private readonly ILogger<TwitchRecorder> _logger;
+    private readonly IConfiguration _configuration;
     
     //Properties
     public string? RecorderName { get; private set; }
@@ -15,24 +17,25 @@ public class TwitchRecorder : IRecorder
 
     private Task? _recordingTask;
 
-    public TwitchRecorder()
+    public TwitchRecorder(ILogger<TwitchRecorder> logger, IConfiguration configuration)
     {
-        
+        _logger = logger;
+        _configuration = configuration;
     }
     
-    private void Setup(string name, string outputPath)
+    private void Setup(string streamLink, string outputPath)
     {
         // Implementation for setting up Twitch recorder
-        Console.WriteLine($"Setting up Twitch recorder for channel: {name}");
+        Console.WriteLine($"Setting up Twitch recorder for channel: {streamLink}");
         
-        RecorderName = name;
+        RecorderName = streamLink;
         OutputPath = outputPath;
         
     }
 
-    public void StartRecording(string name, string outputPath)
+    public void StartRecording(string streamLink, string outputPath)
     {
-        Setup(name, outputPath);
+        Setup(streamLink, outputPath);
         Console.WriteLine($"Starting Twitch recording from {RecorderName} to {OutputPath}");
     }
 

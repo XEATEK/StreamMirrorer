@@ -1,4 +1,4 @@
-namespace Recorder.Interfaces;
+namespace StreamMirrorer.Interfaces;
 
 public interface IRecorder
 {

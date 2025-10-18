@@ -1,4 +1,7 @@
 ﻿@page "/"
+@using StreamMirrorer.Enums
+@using StreamMirrorer.Interfaces
+@inject IRecordController RecordController
 
 <PageTitle>Home</PageTitle>
 
@@ -17,7 +20,7 @@ Welcome to your new app.
 
     private void IncrementCount()
     {
-        CurrentCount++;
+        RecordController.StartNewRecording("Shoomimi", StreamerPlatforms.Twitch);
     }
 
 }

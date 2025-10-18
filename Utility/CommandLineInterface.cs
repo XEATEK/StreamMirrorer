@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using System.Runtime.InteropServices;
-using Recorder.Interfaces;
+using StreamMirrorer.Interfaces;
 
-namespace Recorder.Utility;
+namespace StreamMirrorer.Utility;
 
 public class CommandLineInterface : ICommandLineInterface
 {
