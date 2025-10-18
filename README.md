@@ -6,7 +6,7 @@ A robust, self-hosted application designed to automatically archive Twitch lives
 
 ---
 
-## 📖 About The Project
+## ![📖](https://cdn.7tv.app/emote/01JEHACW9H12QMARYBSCQAMTZ0/1x.webp) About The Project
 
 Have you ever missed a livestream from your favorite creator, only to find the VOD was muted? This project aims to solve that problem by creating a reliable, "set-and-forget" solution for archiving Twitch streams on your own hardware.
 
@@ -14,7 +14,7 @@ The goal is to build a robust application that monitors specified Twitch channel
 
 This project is currently in the planning and development phase. The core focus is on building a stable and scalable system from the ground up.
 
-## ✨ Core Features (Planned)
+## ![✨](https://cdn.7tv.app/emote/01K4PK2AE23FTM1P2N2W0XCYYD/1x.webp) Core Features (Planned)
 
 *   **Automated Recording**: Automatically detects when a monitored Twitch channel goes live and begins recording immediately.
 *   **Local First Storage**: All video files are saved directly to your own server, giving you full control over your data.
@@ -26,7 +26,7 @@ This project is currently in the planning and development phase. The core focus 
 *   **Robust & Resilient**: Designed to handle stream interruptions and API changes gracefully, ensuring the most complete archive possible.
 *   **Scalable Storage**: Built with an object storage architecture (like S3) to handle large video files efficiently and reliably.
 
-## ⚙️ How It Works (Technical Approach)
+## ![⚙️](https://static-cdn.jtvnw.net/emoticons/v2/emotesv2_bc6369b214594b499913ed8d3c595053/default/dark/1.0) How It Works (Technical Approach)
 
 To ensure stability and avoid reinventing the wheel, this application will be built on top of proven, industry-standard tools:
 
@@ -39,11 +39,11 @@ To ensure stability and avoid reinventing the wheel, this application will be bu
     *   **The large video file (the "object")** will be stored in the object storage.
     *   This separation ensures that the database remains fast and that video file operations are scalable and resilient.
 
-## 🚀 Project Vision
+## ![🚀](https://cdn.7tv.app/emote/01JJBD868VHFVYS5MXYRCY4ZK2/1x.webp) Project Vision
 
 The ultimate vision is to create a polished, open-source application that anyone can easily deploy on their home server or NAS. It should be a reliable tool for content creators, researchers, or any fan who wants to maintain a personal, permanent archive of Twitch content.
 
-## ⚠️ Current Status
+## ![⚠️](https://cdn.7tv.app/emote/01J23QVR30000FQRZQPZ7GJG6C/1x.webp) Current Status
 
 This project is in it's **development stage**. The core architecture has been designed, but there is no functional release available yet.
 
