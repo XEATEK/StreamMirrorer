@@ -47,6 +47,13 @@ The ultimate vision is to create a polished, open-source application that anyone
 
 This project is in it's **development stage**. The core architecture has been designed, but there is no functional release available yet.
 
+## FAQ
+Q: How do I get my twitch OAuth token?
+A: Open your console on any twitch page and paste the following code. This returns your OAuth token.
+```javascript
+document.cookie.split("; ").find(item=>item.startsWith("auth-token="))?.split("=")[1]
+```
+
 ---
 
 That's all for now!
