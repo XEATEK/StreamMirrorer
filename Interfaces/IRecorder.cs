@@ -22,10 +22,10 @@ public interface IRecorder
     /// </summary>
     /// <param name="name">Name of broadcast channel</param>
     /// <param name="outputPath">System folder path to temporarily store data</param>
-    public void StartRecording(string name, string outputPath);
+    public Task<bool> StartRecording(string name, string outputPath);
     
     /// <summary>
     /// Stops the recording process.
     /// </summary>
-    public void StopRecording();
+    public Task<bool> StopRecording();
 }

@@ -2,6 +2,7 @@
 @using StreamMirrorer.Enums
 @using StreamMirrorer.Interfaces
 @inject IRecordController RecordController
+@inject IJSRuntime JsRuntime
 
 <PageTitle>Home</PageTitle>
 
@@ -9,14 +10,23 @@
 
 <p role="status">Test Recorder: @RecorderTimes</p>
 
+<input type="text" @bind-value="StreamerName" placeholder="Streamer username"/>
+
 <button class="btn btn-primary" @onclick="IncrementCount">Record 10 second segment</button>
 
 @code {
+    private string? StreamerName { get; set; }
     private int RecorderTimes { get; set; }
     
-    private void IncrementCount()
+    private async Task IncrementCount()
     {
-        RecordController.StartNewRecording("Shoomimi", StreamerPlatforms.Twitch);
+        if (string.IsNullOrWhiteSpace(StreamerName))
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Please enter a streamer name!");
+            return;
+        }
+        
+        await RecordController.StartNewRecording(StreamerName, StreamerPlatforms.Twitch);
         RecorderTimes++;
     }
 

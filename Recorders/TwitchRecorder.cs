@@ -48,15 +48,46 @@ public class TwitchRecorder : IRecorder
         
     }
 
-    public void StartRecording(string name, string outputPath)
+    private async Task<string> GetStreamLink()
+    {
+        CommandLineInterface cli = new CommandLineInterface();
+        
+        string streamLinkCommand = _configuration["StreamLinkCommand"] ?? "streamlink {TwitchParameters} {StreamerLink} best --json";
+        
+        Dictionary<string, object> linkParms = new()
+        {
+            { "StreamerLink", StreamLink ?? throw new ArgumentNullException(nameof(StreamLink), "StreamLink cannot be null.") },
+            { "TwitchParameters", _configuration["StreamLink:TwitchParameters"] ?? "" }
+        };
+        
+        _logger.LogInformation("Parameters: {linkParms}", linkParms);
+        
+        string command = StringFormatter.ReplaceNamedPlaceholders(streamLinkCommand, linkParms);
+        
+        _logger.LogInformation("Command to get stream url: {command}", command);
+        
+        string result = await cli.Execute(command);
+
+        _logger.LogInformation("Result: {result}", result);
+        
+        return result;
+    }
+
+    public async Task<bool> StartRecording(string name, string outputPath)
     {
         Setup(name, outputPath);
         _logger.LogInformation("Starting Twitch recording from {name} to {outputPath}", name, outputPath);
+        
+        string streamLink = await GetStreamLink();
+
+        return true;
     }
 
-    public void StopRecording()
+    public async Task<bool> StopRecording()
     {
         _logger.LogInformation("Stopping Twitch recording");
+        
+        return true;
     }
     
 }

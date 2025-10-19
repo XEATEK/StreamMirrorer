@@ -28,11 +28,12 @@ public class RecordController : IRecordController
 
         const string outputPath = @"O:\Projects\StreamMirrorer\TempStreams";
         
-        recorder.StartRecording(streamerName, outputPath);
+        await recorder.StartRecording(streamerName, outputPath);
         
+        //TODO: add to recorder object to dict (note: Make function that locks and does the change)
         Thread.Sleep(10000);
         
-        recorder.StopRecording();
+        await recorder.StopRecording();
         
         return true;
     }
