@@ -82,4 +82,4 @@ msbuild.wrn
 .vs/
 
 # Sensitive Information
-appsettings.json
+!/appsettings.json
