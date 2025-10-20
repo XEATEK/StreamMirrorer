@@ -49,6 +49,7 @@ This project is in it's **development stage**. The core architecture has been de
 
 ## FAQ
 Q: How do I get my twitch OAuth token?
+
 A: Open your console on any twitch page and paste the following code. This returns your OAuth token.
 ```javascript
 document.cookie.split("; ").find(item=>item.startsWith("auth-token="))?.split("=")[1]
