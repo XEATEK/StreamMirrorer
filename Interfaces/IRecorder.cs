@@ -16,7 +16,7 @@ public interface IRecorder
     /// Starts the recording process.
     /// </summary>
     /// <param name="name">Name of broadcast channel</param>
-    public Task<bool> StartRecording(string name);
+    public void StartRecording(string name);
     
     /// <summary>
     /// Stops the recording process.

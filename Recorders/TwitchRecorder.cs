@@ -19,9 +19,9 @@ public class TwitchRecorder : IRecorder
     public string? RecorderName { get; private set; }
 
     public bool IsRecording { get; private set; } = false;
-    
-    private Task? _recordingTask;
-    
+
+    private CancellationTokenSource _cts;
+
     private string? StreamLink { get; set; }
 
     public TwitchRecorder(ILoggerFactory loggerFactory, IConfiguration configuration)
@@ -50,9 +50,17 @@ public class TwitchRecorder : IRecorder
         _logger.LogInformation("StreamerLink: {streamLink}", StreamLink);
 
         RecorderName = username;
+
+        _logger.LogInformation("creating cancellation token");
+        _cts = new CancellationTokenSource();
     }
-    
-    public async Task<bool> StartRecording(string channelName)
+
+    public void StartRecording(string channelName)
+    {
+        _ = Task.Factory.StartNew(() => RecordingProcess(channelName));
+    }
+
+    private async Task RecordingProcess(string channelName)
     {
         try
         {
@@ -68,10 +76,9 @@ public class TwitchRecorder : IRecorder
 
             // Start processing. This will run until StopProcessing is called or the stream ends.
             var processingTask = handler.StartProcessing(streamLink, archiver.HandleDataChunk);
-
-            //TODO: remove & setup st
-            _logger.LogInformation("Processing stream for 20 seconds...");
-            await Task.Delay(20000);
+            
+            await Task.Delay(Timeout.Infinite, _cts.Token)
+                .ConfigureAwait(ConfigureAwaitOptions.SuppressThrowing);
 
             handler.StopProcessing();
 
@@ -79,8 +86,6 @@ public class TwitchRecorder : IRecorder
             await processingTask;
 
             _logger.LogInformation("Recording finished.");
-
-            return true;
         }
         catch (Exception e)
         {
@@ -92,7 +97,7 @@ public class TwitchRecorder : IRecorder
     public async Task<bool> StopRecording()
     {
         _logger.LogInformation("Stopping Twitch recording");
-
+        await _cts.CancelAsync();
         return true;
     }
 
@@ -123,9 +128,9 @@ public class TwitchRecorder : IRecorder
         _logger.LogInformation("Result: {result}", result);
 
         JsonNode? jsonData = JsonNode.Parse(result);
-        
-        if (jsonData != null && 
-            jsonData.AsObject().TryGetPropertyValue("url", out var urlNode) && 
+
+        if (jsonData != null &&
+            jsonData.AsObject().TryGetPropertyValue("url", out var urlNode) &&
             urlNode != null)
         {
             return urlNode.ToString();

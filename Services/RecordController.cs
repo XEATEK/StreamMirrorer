@@ -24,20 +24,35 @@ public class RecordController : IRecordController
     
     public async Task<bool> StartNewRecording(string streamerName, StreamerPlatforms streamerPlatform)
     {
+        streamerName = streamerName.ToLower();
+        
         IRecorder recorder = _recorderFactory.Create(streamerPlatform);
+
+        if (Recorders.ContainsKey(streamerName))
+        {
+            return false;
+        }
         
-        await recorder.StartRecording(streamerName);
+        recorder.StartRecording(streamerName);
         
-        //TODO: add to recorder object to dict (note: Make function that locks and does the change)
-        Thread.Sleep(10000);
-        
-        await recorder.StopRecording();
+        Recorders.Add(streamerName, recorder);
         
         return true;
     }
 
     public async Task<bool> StopActiveRecording(string streamerName, StreamerPlatforms streamerPlatform)
     {
-        return true; 
+        streamerName = streamerName.ToLower();
+        IRecorder? recorder;
+        
+        Recorders.TryGetValue(streamerName, out recorder);
+        
+        if (recorder == null)
+        {
+            return false;
+        }
+        
+        Recorders.Remove(streamerName);
+        return await recorder.StopRecording();
     }
 }

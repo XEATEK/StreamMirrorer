@@ -10,23 +10,62 @@
 
 <p role="status">Test Recorder: @RecorderTimes</p>
 
-<input type="text" @bind-value="StreamerName" placeholder="Streamer username"/>
+<div style="display: flex; flex-direction: column; gap: 1em;">
+    <div>
+        <label role="status">Start recording.</label><br/>
+        <input type="text" @bind-value="StreamerNameStart" placeholder="Streamer username"/>
+        <button class="btn btn-primary" @onclick="StartRecording">Start recording</button>
+    </div>
 
-<button class="btn btn-primary" @onclick="IncrementCount">Record 10 second segment</button>
+    <div>
+        <label role="status">Stop recording.</label><br/>
+        <input type="text" @bind-value="StreamerNameStop" placeholder="Streamer username"/>
+        <button class="btn btn-primary" @onclick="StopRecording">Stop recording</button>
+    </div>
+</div>
 
 @code {
-    private string? StreamerName { get; set; }
+    private string? StreamerNameStart { get; set; }
+    private string? StreamerNameStop { get; set; }
     private int RecorderTimes { get; set; }
-    
-    private async Task IncrementCount()
+
+    private async Task StartRecording()
     {
-        if (string.IsNullOrWhiteSpace(StreamerName))
+        if (string.IsNullOrWhiteSpace(StreamerNameStart))
         {
             await JsRuntime.InvokeVoidAsync("alert", "Please enter a streamer name!");
             return;
         }
-        
-        await RecordController.StartNewRecording(StreamerName, StreamerPlatforms.Twitch);
+
+        bool success = await RecordController.StartNewRecording(StreamerNameStart, StreamerPlatforms.Twitch);
+        if (success)
+        {
+            RecorderTimes++;
+        }
+        else
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Something went wrong starting the recording!");
+        }
+    }
+
+    private async Task StopRecording()
+    {
+        if (string.IsNullOrWhiteSpace(StreamerNameStop))
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Please enter a streamer name!");
+            return;
+        }
+
+        bool success = await RecordController.StopActiveRecording(StreamerNameStop, StreamerPlatforms.Twitch);
+        if (success)
+        {
+            RecorderTimes++;
+        }
+        else
+        {
+            await JsRuntime.InvokeVoidAsync("alert", "Something went wrong stopping the recording!");
+        }
+
         RecorderTimes++;
     }
 
