@@ -17,12 +17,11 @@ public class TwitchRecorder : IRecorder
 
     //Properties
     public string? RecorderName { get; private set; }
-    public string? OutputPath { get; private set; }
 
     public bool IsRecording { get; private set; } = false;
-
+    
     private Task? _recordingTask;
-
+    
     private string? StreamLink { get; set; }
 
     public TwitchRecorder(ILoggerFactory loggerFactory, IConfiguration configuration)
@@ -32,7 +31,7 @@ public class TwitchRecorder : IRecorder
         _configuration = configuration;
     }
 
-    private void Setup(string username, string outputPath)
+    private void Setup(string username)
     {
         // Implementation for setting up Twitch recorder
         _logger.LogInformation("Setting up Twitch recorder for channel: {username}", username);
@@ -51,7 +50,50 @@ public class TwitchRecorder : IRecorder
         _logger.LogInformation("StreamerLink: {streamLink}", StreamLink);
 
         RecorderName = username;
-        OutputPath = outputPath;
+    }
+    
+    public async Task<bool> StartRecording(string channelName)
+    {
+        try
+        {
+            Setup(channelName);
+            _logger.LogInformation("Starting Twitch recording from {channelName}", channelName);
+
+            string streamLink = await GetStreamLink();
+
+            //Create stream handler that stores the received stream
+            await using IStreamArchiver archiver = new FileArchiver(_loggerFactory, channelName);
+
+            HlsStreamHandler handler = new(_loggerFactory, _configuration);
+
+            // Start processing. This will run until StopProcessing is called or the stream ends.
+            var processingTask = handler.StartProcessing(streamLink, archiver.HandleDataChunk);
+
+            //TODO: remove & setup st
+            _logger.LogInformation("Processing stream for 20 seconds...");
+            await Task.Delay(20000);
+
+            handler.StopProcessing();
+
+            // Wait for the main processing task to complete its cleanup
+            await processingTask;
+
+            _logger.LogInformation("Recording finished.");
+
+            return true;
+        }
+        catch (Exception e)
+        {
+            _logger.LogCritical(message: "Error occured while starting recording: {e}", e);
+            throw;
+        }
+    }
+
+    public async Task<bool> StopRecording()
+    {
+        _logger.LogInformation("Stopping Twitch recording");
+
+        return true;
     }
 
     private async Task<string> GetStreamLink()
@@ -90,53 +132,5 @@ public class TwitchRecorder : IRecorder
         }
 
         throw new NullReferenceException("Could not find 'url' in the expected JSON array structure.");
-    }
-
-    public async Task<bool> StartRecording(string name, string outputPath)
-    {
-        try
-        {
-            Setup(name, outputPath);
-            _logger.LogInformation("Starting Twitch recording from {name} to {outputPath}", name, outputPath);
-
-            string streamLink = await GetStreamLink();
-
-            string timestamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-
-            //string hlsUrl = "https://test-streams.mux.dev/x36xhzz/x36xhzz.m3u8";
-            string archivePath = $"O:\\Projects\\StreamMirrorer\\TempStreams\\{name}\\{timestamp}";
-
-            await using var archiver = new StreamArchiver(_loggerFactory, archivePath);
-
-            HlsStreamHandler handler = new(_loggerFactory, _configuration);
-
-            // Start processing. This will run until StopProcessing is called or the stream ends.
-            var processingTask = handler.StartProcessing(streamLink, archiver.HandleDataChunk);
-
-            //TODO: remove & setup st
-            _logger.LogInformation("Processing stream for 20 seconds...");
-            await Task.Delay(20000);
-
-            handler.StopProcessing();
-
-            // Wait for the main processing task to complete its cleanup
-            await processingTask;
-
-            _logger.LogInformation("Recording finished.");
-
-            return true;
-        }
-        catch (Exception e)
-        {
-            _logger.LogCritical(message: "Error occured while starting recording: {e}", e);
-            throw;
-        }
-    }
-
-    public async Task<bool> StopRecording()
-    {
-        _logger.LogInformation("Stopping Twitch recording");
-
-        return true;
     }
 }

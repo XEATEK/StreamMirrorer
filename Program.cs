@@ -2,9 +2,12 @@ using StreamMirrorer.Interfaces;
 using StreamMirrorer.Recorders;
 using StreamMirrorer.Services;
 using Serilog;
+using Serilog.Configuration;
+using Serilog.Core;
 using Serilog.Events;
 using StreamMirrorer.Components;
 using StreamMirrorer.Utility;
+using StreamMirrorer.Utility.DataSavers;
 
 namespace StreamMirrorer;
 
@@ -19,19 +22,29 @@ internal class Program
         string seqServerUrl = builder.Configuration["Seq:ServerUrl"] ?? throw new NullReferenceException();
         string seqApiKey = builder.Configuration["Seq:ApiKey"] ?? throw new NullReferenceException();
         string minLogLevel = builder.Configuration["Seq:MinLogLevel"] ?? throw new NullReferenceException();
+        IDictionary<string, string> minLogServices = builder.Configuration.GetSection("Seq:MinLogServices")
+            .Get<IDictionary<string, string>>() ?? throw new NullReferenceException();
 
-        Log.Logger = new LoggerConfiguration()
+        LoggerConfiguration logConfig = new LoggerConfiguration()
             .MinimumLevel.Is((LogEventLevel)int.Parse(minLogLevel))
             .Enrich.WithProperty("XPG", processName)
             .Enrich.FromLogContext()
             .WriteTo.Console()
-            .WriteTo.Seq(seqServerUrl, apiKey: seqApiKey)
-            .CreateLogger();
+            .WriteTo.Seq(seqServerUrl, apiKey: seqApiKey);
 
+        //set min log level per service
+        foreach (KeyValuePair<string, string> logService in minLogServices)
+        {
+            logConfig.MinimumLevel.Override(logService.Key, (LogEventLevel)int.Parse(logService.Value));
+        }
+        
+        Log.Logger = logConfig.CreateLogger();
+        
         builder.Host.UseSerilog();
 
         // Add services to the container.
         IServiceCollection services = builder.Services;
+
         
         services.AddSingleton<IRecordController, RecordController>();
         services.AddSingleton<RecorderFactory>();

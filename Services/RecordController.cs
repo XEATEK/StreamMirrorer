@@ -25,10 +25,8 @@ public class RecordController : IRecordController
     public async Task<bool> StartNewRecording(string streamerName, StreamerPlatforms streamerPlatform)
     {
         IRecorder recorder = _recorderFactory.Create(streamerPlatform);
-
-        const string outputPath = @"O:\Projects\StreamMirrorer\TempStreams";
         
-        await recorder.StartRecording(streamerName, outputPath);
+        await recorder.StartRecording(streamerName);
         
         //TODO: add to recorder object to dict (note: Make function that locks and does the change)
         Thread.Sleep(10000);
