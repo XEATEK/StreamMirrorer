@@ -1,6 +1,8 @@
-namespace StreamMirrorer.Utility;
+using StreamMirrorer.Interfaces;
 
-public class StreamArchiver : IAsyncDisposable
+namespace StreamMirrorer.Utility.DataSavers;
+
+public class StreamArchiver : IStreamArchiver
 {
     private readonly ILogger<StreamArchiver> _logger;
     
@@ -43,5 +45,6 @@ public class StreamArchiver : IAsyncDisposable
         _logger.LogInformation("Archiver is being disposed. Flushing and closing file stream...");
         await _fileStream.DisposeAsync();
         _logger.LogInformation("Archive file closed.");
+        GC.SuppressFinalize(this);
     }
 }
