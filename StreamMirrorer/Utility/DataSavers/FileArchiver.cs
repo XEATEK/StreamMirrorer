@@ -2,15 +2,19 @@ using StreamMirrorer.Interfaces;
 
 namespace StreamMirrorer.Utility.DataSavers;
 
-public class StreamArchiver : IStreamArchiver
+public class FileArchiver : IStreamArchiver
 {
-    private readonly ILogger<StreamArchiver> _logger;
+    private readonly ILogger<FileArchiver> _logger;
     
     private readonly FileStream _fileStream;
 
-    public StreamArchiver(ILoggerFactory loggerFactory, string directoryPath)
+    public FileArchiver(ILoggerFactory loggerFactory, string streamerName)
     {
-        _logger = loggerFactory.CreateLogger<StreamArchiver>();
+        _logger = loggerFactory.CreateLogger<FileArchiver>();
+        
+        //Set directory string
+        string timestamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        string directoryPath = $"O:\\Projects\\StreamMirrorer\\TempStreams\\{streamerName}\\{timestamp}";
         
         if (!string.IsNullOrEmpty(directoryPath))
         {
@@ -33,7 +37,7 @@ public class StreamArchiver : IStreamArchiver
         {
             // Write the received chunk of data directly to the file.
             _fileStream.Write(data.Span);
-            _logger.LogInformation("Archived {Length} bytes.", data.Length);
+            _logger.LogTrace("Archived {Length} bytes.", data.Length);
         }
     }
 

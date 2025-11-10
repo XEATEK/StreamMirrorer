@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Serilog.Context;
 using StreamMirrorer.Recorders;
 
 namespace StreamMirrorer.Utility;
@@ -48,7 +49,10 @@ public class HlsStreamHandler
         _ffmpegProcess = new Process { StartInfo = processStartInfo };
         _ffmpegProcess.ErrorDataReceived += (sender, args) =>
         {
-            if (!string.IsNullOrEmpty(args.Data)) _logger.LogInformation("[FFmpeg]: {Data}", args.Data);
+            if (!string.IsNullOrEmpty(args.Data))
+            {
+                _logger.LogTrace(message: "[FFmpeg]: {Data}", args: args.Data);
+            }
         };
 
         try
