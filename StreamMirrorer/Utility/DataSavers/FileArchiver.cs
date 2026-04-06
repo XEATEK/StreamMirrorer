@@ -8,14 +8,16 @@ public class FileArchiver : IStreamArchiver
     
     private readonly FileStream _fileStream;
 
-    public FileArchiver(ILoggerFactory loggerFactory, string streamerName)
+    public FileArchiver(ILoggerFactory loggerFactory, IConfiguration config, string streamerName)
     {
         _logger = loggerFactory.CreateLogger<FileArchiver>();
         
         //Set directory string
         string timestamp = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-        string directoryPath = $"O:\\Projects\\StreamMirrorer\\TempStreams\\{streamerName}\\{timestamp}";
-        
+        string fileArchiverDir = config.GetValue<string>("FileArchiverDir") ?? throw new NullReferenceException(message: "No FileArchiverDir specified in configuration.");
+
+        string directoryPath = Path.Combine(fileArchiverDir, Path.Combine(streamerName, timestamp));
+
         if (!string.IsNullOrEmpty(directoryPath))
         {
             Directory.CreateDirectory(directoryPath);

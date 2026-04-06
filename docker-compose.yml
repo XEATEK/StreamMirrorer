@@ -1,0 +1,15 @@
+services:
+  streammirrorer:
+    image: ${DOCKER_REGISTRY-}streammirrorer
+    build:
+      context: .
+      dockerfile: StreamMirrorer/Dockerfile
+    ports:
+      - "8080:8080"
+    environment:
+      - ASPNETCORE_ENVIRONMENT=Development
+      # Override the FileArchiverDir to use a Linux container path
+      - FileArchiverDir=/app/Streams
+    volumes:
+      # Map a local folder to the container's output directory so downloaded streams are persisted
+      - ./Streams:/app/Streams

@@ -31,17 +31,17 @@ public class CommandLineInterface : ICommandLineInterface
     {
         if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
         {
-            return new ProcessStartInfo(
-                "cmd.exe",
-                "/C " + command
-            );
+            var info = new ProcessStartInfo("cmd.exe");
+            info.ArgumentList.Add("/C");
+            info.ArgumentList.Add(command);
+            return info;
         }
         else if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux) || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
         {
-            return new ProcessStartInfo(
-                "/bin/bash",
-                $"-c \"{command}\""
-            );
+            var info = new ProcessStartInfo("/bin/bash");
+            info.ArgumentList.Add("-c");
+            info.ArgumentList.Add(command);
+            return info;
         }
         else
         {

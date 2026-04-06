@@ -29,6 +29,7 @@ public class TwitchRecorder : IRecorder
         _logger = loggerFactory.CreateLogger<TwitchRecorder>();
         _loggerFactory = loggerFactory;
         _configuration = configuration;
+        _cts = new CancellationTokenSource();
     }
 
     private void Setup(string username)
@@ -70,7 +71,7 @@ public class TwitchRecorder : IRecorder
             string streamLink = await GetStreamLink();
 
             //Create stream handler that stores the received stream
-            await using IStreamArchiver archiver = new FileArchiver(_loggerFactory, channelName);
+            await using IStreamArchiver archiver = new FileArchiver(_loggerFactory, _configuration, channelName);
 
             HlsStreamHandler handler = new(_loggerFactory, _configuration);
 

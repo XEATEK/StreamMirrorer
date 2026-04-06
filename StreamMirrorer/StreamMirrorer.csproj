@@ -1,13 +1,21 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
     <PropertyGroup>
         <TargetFramework>net9.0</TargetFramework>
         <Nullable>enable</Nullable>
         <ImplicitUsings>enable</ImplicitUsings>
         <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
-    </PropertyGroup>
+        <DockerfileContext>..\</DockerfileContext>
+      <UserSecretsId>2bac8629-b4b6-47af-bca1-32f88b7836b5</UserSecretsId>
+  </PropertyGroup>
 
     <ItemGroup>
+      <Content Remove="appsettings.json" />
+      <Content Remove="appsettings.template.json" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.23.0" />
       <PackageReference Include="Minio" Version="7.0.0" />
       <PackageReference Include="Serilog" Version="4.3.1-dev-02385" />
       <PackageReference Include="Serilog.Extensions.Hosting" Version="9.0.1-dev-02307" />
@@ -60,6 +68,15 @@
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.js.map" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js" />
       <_ContentIncludedByDefault Remove="wwwroot\lib\bootstrap\dist\js\bootstrap.min.js.map" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Resource Include="appsettings.json">
+        <CopyToOutputDirectory>Never</CopyToOutputDirectory>
+      </Resource>
+      <Resource Include="appsettings.template.json">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Resource>
     </ItemGroup>
 
 </Project>
