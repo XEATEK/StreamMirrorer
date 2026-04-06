@@ -48,10 +48,12 @@ internal class Program
         
         services.AddSingleton<IRecordController, RecordController>();
         services.AddSingleton<RecorderFactory>();
-        
+
         //Recorders
         services.AddTransient<TwitchRecorder>();
-        
+
+        services.AddControllers();
+
         services.AddRazorComponents()
             .AddInteractiveServerComponents();
 
@@ -72,6 +74,7 @@ internal class Program
         app.UseAntiforgery();
 
         app.MapStaticAssets();
+        app.MapControllers();
         app.MapRazorComponents<App>()
             .AddInteractiveServerRenderMode();
 
