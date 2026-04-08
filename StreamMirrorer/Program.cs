@@ -52,6 +52,7 @@ internal class Program
         //Recorders
         services.AddTransient<TwitchRecorder>();
 
+
         services.AddControllers();
 
         services.AddRazorComponents()
@@ -70,10 +71,13 @@ internal class Program
 
         app.UseHttpsRedirection();
 
+        app.UseAntiforgery();
+
         app.MapStaticAssets();
-        app.MapControllers();
+        app.MapControllers().DisableAntiforgery();
         app.MapRazorComponents<App>()
-            .AddInteractiveServerRenderMode();
+            .AddInteractiveServerRenderMode()
+            .DisableAntiforgery();
 
         app.Run();
     }
