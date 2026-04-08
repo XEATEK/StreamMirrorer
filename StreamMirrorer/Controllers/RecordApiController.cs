@@ -6,6 +6,7 @@ namespace StreamMirrorer.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
+[IgnoreAntiforgeryToken]
 public class RecordApiController : ControllerBase
 {
     private readonly IRecordController _recordController;
