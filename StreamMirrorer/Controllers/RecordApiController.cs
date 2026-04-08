@@ -16,7 +16,7 @@ public class RecordApiController : ControllerBase
     }
 
     [HttpPost("start")]
-    public async Task<IActionResult> StartRecording([FromQuery] string streamerName, [FromQuery] StreamerPlatforms platform)
+    public async Task<IActionResult> StartRecording([FromBody] string streamerName, [FromBody] StreamerPlatforms platform)
     {
         if (string.IsNullOrWhiteSpace(streamerName))
         {
@@ -33,7 +33,7 @@ public class RecordApiController : ControllerBase
     }
 
     [HttpPost("stop")]
-    public async Task<IActionResult> StopRecording([FromQuery] string streamerName, [FromQuery] StreamerPlatforms platform)
+    public async Task<IActionResult> StopRecording([FromBody] string streamerName, [FromBody] StreamerPlatforms platform)
     {
         if (string.IsNullOrWhiteSpace(streamerName))
         {
