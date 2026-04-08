@@ -16,8 +16,8 @@ public class RecordApiController : ControllerBase
         _recordController = recordController;
     }
 
-    [HttpPost("start")]
-    public async Task<IActionResult> StartRecording([FromBody] string streamerName, [FromBody] StreamerPlatforms platform)
+    [HttpGet("start")]
+    public async Task<IActionResult> StartRecording([FromQuery] string streamerName, [FromQuery] StreamerPlatforms platform)
     {
         if (string.IsNullOrWhiteSpace(streamerName))
         {
@@ -33,8 +33,8 @@ public class RecordApiController : ControllerBase
         return Conflict(new { message = $"Recording already in progress for {streamerName}" });
     }
 
-    [HttpPost("stop")]
-    public async Task<IActionResult> StopRecording([FromBody] string streamerName, [FromBody] StreamerPlatforms platform)
+    [HttpGet("stop")]
+    public async Task<IActionResult> StopRecording([FromQuery] string streamerName, [FromQuery] StreamerPlatforms platform)
     {
         if (string.IsNullOrWhiteSpace(streamerName))
         {
